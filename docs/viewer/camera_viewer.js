@@ -39,7 +39,7 @@ class CameraTypeBase {
 
         this.camera = camera;
         this.view = view;
-        this.position = {"x": 0.5, "y": 0.5, "z": 0.0};
+        this.position = { "x": 0.5, "y": 0.5, "z": 0.0 };
         this.update();
     }
 
@@ -48,7 +48,7 @@ class CameraTypeBase {
         this.camera.position.x = -halfBaseline * (2 * this.position.x - 1);
         this.camera.position.y = halfBaseline * (2 * this.position.y - 1);
         this.camera.position.z = this.position.z;
-        this.camera.lookAt(this.LOOKAT_POINT);
+        // this.camera.lookAt(this.LOOKAT_POINT);
     }
 
     onWheel(e) {
@@ -57,16 +57,18 @@ class CameraTypeBase {
         this.update();
     }
 
-    onMouseMove(e) {    }
+    onMouseMove(e) { }
 
-    onMouseDown(e) {    }
+    onMouseDown(e) { }
 
-    onMouseUp(e) {    }
+    onMouseUp(e) { }
 
-    onMouseLeave(e) {    }
+    onMouseLeave(e) { }
 
     dispose() { }
 }
+
+const movementMultiplier = 1.5;
 
 class HoverCamera extends CameraTypeBase {
     constructor(camera, view) {
@@ -74,8 +76,8 @@ class HoverCamera extends CameraTypeBase {
     }
 
     onMouseMove(e) {
-        this.position.x = e.offsetX / this.view.clientWidth;
-        this.position.y = e.offsetY / this.view.clientHeight;
+        this.position.x = e.offsetX / this.view.clientWidth * movementMultiplier;
+        this.position.y = e.offsetY / this.view.clientHeight * movementMultiplier;
         this.update();
     }
 }
@@ -93,15 +95,15 @@ class DragCamera extends CameraTypeBase {
     onMouseMove(e) {
         if (!this.dragging)
             return;
-        this.position.x += (e.offsetX - this.previous.x) / this.view.clientWidth;
-        this.position.y += (e.offsetY - this.previous.y) / this.view.clientHeight;
-        this.previous = {"x": e.offsetX, "y": e.offsetY};
-  
+        this.position.x += (e.offsetX - this.previous.x) / this.view.clientWidth * movementMultiplier;
+        this.position.y += (e.offsetY - this.previous.y) / this.view.clientHeight * movementMultiplier;
+        this.previous = { "x": e.offsetX, "y": e.offsetY };
+
         this.update();
     }
 
     onMouseDown(e) {
-        this.previous = {"x": e.offsetX, "y": e.offsetY};
+        this.previous = { "x": e.offsetX, "y": e.offsetY };
         this.dragging = true;
     }
 
@@ -123,8 +125,8 @@ class SwayCamera extends CameraTypeBase {
     }
 
     tick() {
-        const elapsed = Date.now() - this.start_time;
-        this.position.x = 0.5 + 0.5 * Math.sin(Math.PI * elapsed / 3000);
+        this.position.x += 0.02;
+        if (this.position.x > movementMultiplier) this.position.x = -movementMultiplier;
         this.update();
     }
 
@@ -143,9 +145,9 @@ class WonderCamera extends CameraTypeBase {
 
     tick() {
         const elapsed = Date.now() - this.start_time;
-        this.position.x = 0.5 + 0.5 * Math.cos(Math.PI / 2 + Math.PI * elapsed / 3000);
-        this.position.y = 0.5 + 0.5 * Math.sin(Math.PI * elapsed / 4300);
-        this.position.z = 0.1 * Math.sin(Math.PI * elapsed / 8012);
+        this.position.x = movementMultiplier * Math.cos(Math.PI / 2 + Math.PI * elapsed / 3000);
+        this.position.y = movementMultiplier * Math.sin(Math.PI * elapsed / 4300);
+        this.position.z = movementMultiplier / 5 * Math.sin(Math.PI * elapsed / 8012);
 
         this.update();
     }
