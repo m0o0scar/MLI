@@ -13,41 +13,41 @@ See the License for the specific language governing permissions and
 limitations under the License. */
 
 html {
-    display: block;
-    height: auto;
-    min-height: 100vh;
-    box-sizing: border-box;
+  display: block;
+  height: auto;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 body {
-    font-family: 'Open Sans', sans-serif;
-    background: #fff;
-    color: #7a7a7a;
-    font-weight: normal;
-    margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background: #fff;
+  color: #7a7a7a;
+  font-weight: normal;
+  margin: 0;
 }
 h1 {
-    display: block;
-    margin: 0.2em 0;
-    font-family: 'Open Sans', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: 2.1em;
-    font-weight: 700;
-    color: #000;
+  display: block;
+  margin: 0.2em 0;
+  font-family: 'Open Sans', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 2.1em;
+  font-weight: 700;
+  color: #000;
 }
 .container {
-    min-width: 300px;
-    margin-right: auto;
-    margin-left: auto;
+  min-width: 300px;
+  margin-right: auto;
+  margin-left: auto;
 }
 .title {
-    display: block;
-    position: relative;
-    text-align: center;
-    padding: 50px 15px 10px;
+  display: block;
+  position: relative;
+  text-align: center;
+  padding: 50px 15px 10px;
 }
 .title h1 {
-    margin-top: 0;
+  margin-top: 0;
 }
 .viewer-container {
   position: sticky;
@@ -63,43 +63,54 @@ h1 {
   height: 100%;
 }
 .scene-lf {
-    width: 100%;
-    padding-bottom: 60%;
-    z-index: 1;
-    position: relative;
+  width: 100%;
+  padding-bottom: 60%;
+  z-index: 1;
+  position: relative;
 }
 .scene-lf:hover .overlay {
-    opacity: 0.85;
+  opacity: 0.85;
 }
 
 .controls {
-    display: block;
-    text-align: center;
+  display: block;
+  text-align: center;
 }
 
 .main_controls {
-    height: 330px; 
-    width: 360px;
-    padding-top: 10%;
+  height: 330px;
+  width: 360px;
+  padding-top: 10%;
 }
 
 button {
-    width: 140px;
-    height: 40px; 
-    border-radius: 14px; 
-    border-color: black;
-    transition-duration: .4s;
+  width: 140px;
+  height: 40px;
+  border-radius: 14px;
+  border-color: black;
+  transition-duration: 0.4s;
 }
 
 button:active {
-    border-color: blue;
-    width: 142px;
-    height: 42px; 
-    transition-duration: .4s;
+  border-color: blue;
+  width: 142px;
+  height: 42px;
+  transition-duration: 0.4s;
+}
+
+select {
+  width: 140px;
+  width: 140px;
+  height: 40px;
+  border-radius: 14px;
+  border-color: black;
+  border-width: 2px;
+  padding: 10px;
+  text-overflow: ellipsis;
 }
 
 .column_ {
-    display: flex;
-    flex-direction: column;
-    margin-left: 110px;
+  display: flex;
+  flex-direction: column;
+  margin-left: 110px;
 }

@@ -48,6 +48,31 @@
             <button id="normalViewButton">Normal</button>
           </div>
         </div>
+
+        <div class="controls" style="padding-top: 30px">
+          <div>
+            <p style="font-size: 13pt; line-height: 0.05">Select scene:</p>
+          </div>
+          <div class="column_">
+            <select id="sceneSelect">
+              <option>office</option>
+              <option>bikes</option>
+              <option>car_blue</option>
+              <option>car_red</option>
+              <option>flower_purple</option>
+              <option>flower_red</option>
+              <option>garden</option>
+              <option>leaves</option>
+              <option>piano</option>
+              <option>plant</option>
+              <option>potted_plants</option>
+              <option>soft_toys</option>
+              <option>super_market</option>
+              <option>tools</option>
+              <option>tree</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <div class="main-viewer" style="padding-left: 23%; margin-top: -29%">
@@ -56,20 +81,43 @@
             <canvas
               id="viewer-canvas"
               class="viewer-canvas"
-              width="738"
-              height="576"
+              width="528"
+              height="412"
             >
-              <param id="base-path" value="../scenes/plant/" />
-              <div id="display"></div>
-              <script>
-                document.getElementById('display').innerHTML = startDisplay(
-                  '../scenes/flower_purple/'
-                );
-              </script>
             </canvas>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      const sceneSelect = document.getElementById('sceneSelect');
+      const container = document.querySelector('.viewer-container');
+
+      async function loadScene(name) {
+        container.innerHTML = '';
+        container.innerHTML = `
+          <div id="scene-viewer" class="scene-lf">
+            <canvas
+              id="viewer-canvas"
+              class="viewer-canvas"
+              width="528"
+              height="412"
+            >
+            </canvas>
+          </div>`;
+        const path = `../scenes/${name}`;
+
+        startDisplay(path);
+      }
+
+      function loadSelectedScene() {
+        const name = sceneSelect.selectedOptions[0].value;
+        loadScene(name);
+      }
+
+      sceneSelect.onchange = loadSelectedScene;
+      loadSelectedScene();
+    </script>
   </body>
 </html>
