@@ -25,7 +25,7 @@ function loadAllTextures(baseUrl, layersIds) {
 
 
 
-async function loadAllDepths(meta_data, baseUrl, layersIds, extension='jpg') {
+async function loadAllDepths(meta_data, baseUrl, layersIds, extension = 'jpg') {
   let loader = null
   if (['png', 'jpg'].includes(extension)) {
     loader = (depth_path, meta) => read_jpg_depth(depth_path, meta)
@@ -45,12 +45,12 @@ function setupCamera(canvas) {
   return [camera, new CameraViewHandler(camera, view)];
 }
 
-function setupNeutralHoverCamera(canvas, idScene='scene-viewer') {
+function setupNeutralHoverCamera(canvas, idScene = 'scene-viewer') {
   const camera = new THREE.PerspectiveCamera(
-      72, canvas.clientWidth / canvas.clientHeight, .1, 10000);
+    72, canvas.clientWidth / canvas.clientHeight, .1, 10000);
 
   const view = document.getElementById(idScene);
-  const BASELINE = 0.3;
+  const BASELINE = 1;
   view.addEventListener('wheel', e => {
     const WHEEL_SPEED = .005;
     camera.position.z += WHEEL_SPEED * e.deltaY;
@@ -74,11 +74,11 @@ function setupNeutralHoverCamera(canvas, idScene='scene-viewer') {
 
 function setupRenderer(canvas, camera, scene) {
   const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-//  renderer.setClearColor(0x000000, 0);
-  renderer.setClearColor( 0xffffff, 0);
-//  renderer.setClearColor( 0x808080, 0);
-//  scene.background = new THREE.Color( 0x808080 );
-  scene.background = new THREE.Color( 0xffffff );
+  //  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0xffffff, 0);
+  //  renderer.setClearColor( 0x808080, 0);
+  //  scene.background = new THREE.Color( 0x808080 );
+  scene.background = new THREE.Color(0xffffff);
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setAnimationLoop(() => {
     renderer.render(scene, camera);
@@ -89,20 +89,20 @@ function setupRenderer(canvas, camera, scene) {
 function buildGeometry(verts, faces_flat, uv_flat, depths, ref_camera) {
   // Depth must be reversed to match the uv parametrization
   depths = tf.image.resizeBilinear(depths, [ref_camera.im_height, ref_camera.im_width])
-  const rev_depth = tf.reverse(depths.reshape([ref_camera.im_height, ref_camera.im_width]), axis=0).reshape([-1, 1])
+  const rev_depth = tf.reverse(depths.reshape([ref_camera.im_height, ref_camera.im_width]), axis = 0).reshape([-1, 1])
   const v3 = ref_camera.pixel_to_world(verts.reshape([-1, 2]), rev_depth).reshape([ref_camera.im_height, ref_camera.im_width, 3])
   const positions = v3.flatten().dataSync()
   const geometry = new THREE.BufferGeometry();
- 
+
   geometry.setIndex(Array.from(faces_flat));
-  geometry.setAttribute('position', new THREE.BufferAttribute( positions, 3 ) );
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute('uv', new THREE.BufferAttribute(uv_flat, 2));
 
   return geometry;
 }
 
 function buildMesh(geometry, material) {
-  const mesh = new THREE.Mesh( geometry, material );
+  const mesh = new THREE.Mesh(geometry, material);
   mesh.frustumCulled = false;
   mesh.scale.set(1, 1, -0.7);
   mesh.position.z = 0;
@@ -118,13 +118,13 @@ function buildScene(geometries, materials) {
   return scene
 }
 
-async function startDisplay(inputPath, num_layers=4) {
+async function startDisplay(inputPath, num_layers = 4) {
   const canvas = document.getElementById('viewer-canvas');
   const layersIds = [...Array(num_layers).keys()].map(i => String(i).padStart(2, '0'))
 
-//   document.getElementById('viewer-path');
+  //   document.getElementById('viewer-path');
   const baseUrl = inputPath
-//  const baseUrl = document.getElementById('base-path').value;
+  //  const baseUrl = document.getElementById('base-path').value;
   const meta_data = await fetch(`${baseUrl}/meta.json`).then(result => result.json())
   const ref_camera = await ProjectiveCamera.from_meta(meta_data)
   ref_camera.im_height = ref_camera.im_height / depth_scale
@@ -140,7 +140,7 @@ async function startDisplay(inputPath, num_layers=4) {
   const scene = buildScene(geometries, materials);
 
   const [camera, handler] = setupCamera(canvas);
-  
+
   setCameraControlEvents(handler);
   setViewModeEvents(scene.children, textures_loaded);
   setStatsDsiplay();
@@ -148,12 +148,12 @@ async function startDisplay(inputPath, num_layers=4) {
 }
 
 
-async function startMainDisplay(inputPath, canvasName, idScene='scene-viewer') {
+async function startMainDisplay(inputPath, canvasName, idScene = 'scene-viewer') {
   const canvas = document.getElementById(canvasName);
   const baseUrl = inputPath
   const num_layers = 4;
   const layersIds = [...Array(num_layers).keys()].map(i => String(i).padStart(2, '0'))
-//  const baseUrl = document.getElementById('base-path').value;
+  //  const baseUrl = document.getElementById('base-path').value;
   const meta_data = await fetch(`${baseUrl}/meta.json`).then(result => result.json())
   const ref_camera = await ProjectiveCamera.from_meta(meta_data)
   const depths = await loadAllDepths(meta_data, baseUrl, layersIds)
@@ -166,18 +166,18 @@ async function startMainDisplay(inputPath, canvasName, idScene='scene-viewer') {
   const scene = buildScene(geometries, materials);
 
   const camera = setupNeutralHoverCamera(canvas, idScene);
-//  handler.changleHandler('hover')
-//  setStatsDsiplay();
+  //  handler.changleHandler('hover')
+  //  setStatsDsiplay();
   setupRenderer(canvas, camera, scene);
 }
 
 
-async function startMainDisplayPlain(inputPath, canvasName, idScene='scene-viewer') {
+async function startMainDisplayPlain(inputPath, canvasName, idScene = 'scene-viewer') {
   const canvas = document.getElementById(canvasName);
   const baseUrl = inputPath
   const num_layers = 4;
   const layersIds = [...Array(num_layers).keys()].map(i => String(i).padStart(2, '0'))
-//  const baseUrl = document.getElementById('base-path').value;
+  //  const baseUrl = document.getElementById('base-path').value;
   const meta_data = await fetch(`${baseUrl}/meta.json`).then(result => result.json())
   const ref_camera = await ProjectiveCamera.from_meta(meta_data)
   const depths = await loadAllDepths(meta_data, baseUrl, layersIds)
@@ -188,12 +188,12 @@ async function startMainDisplayPlain(inputPath, canvasName, idScene='scene-viewe
   const geometries = depths.map(depth => buildGeometry(verts, faces_flat, uv_flat, depth, ref_camera))
   const materials = loadAllTextures(baseUrl, layersIds).map(simpleTextureMaterial)
   const scene = buildScene(geometries, materials);
-//  const camera = setupCamera(canvas)
+  //  const camera = setupCamera(canvas)
   const [camera, handler] = setupCamera(canvas);
   handler.changleHandler("wonder")
-//  const view = document.getElementById('scene-viewer');
-//  camera = new WonderCamera(camera, view)
-//  const camera = setupNeutralHoverCamera(canvas, idScene);
+  //  const view = document.getElementById('scene-viewer');
+  //  camera = new WonderCamera(camera, view)
+  //  const camera = setupNeutralHoverCamera(canvas, idScene);
   setupRenderer(canvas, camera, scene);
 }
 
@@ -215,12 +215,12 @@ function setCameraControlEvents(handler) {
 
 function setViewModeEvents(meshes, textures_loaded) {
   function setNewMode(mode) {
-//    textures = meshes.map(mesh => mesh.material.uniforms.atlas.value)
+    //    textures = meshes.map(mesh => mesh.material.uniforms.atlas.value)
     let materials = []
     if (mode == "normal")
       materials = textures_loaded.map((el) => simpleTextureMaterial(el));
     else
-      materials = textures_loaded.map((el) => depthMaterial(el, colormapName=mode));
+      materials = textures_loaded.map((el) => depthMaterial(el, colormapName = mode));
     for (i = 0; i < materials.length; i++)
       meshes[i].material = materials[i];
   }
